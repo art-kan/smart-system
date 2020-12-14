@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Extra\Privileges\WithPrivileges;
 use Eloquent;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Builder;
@@ -54,7 +55,7 @@ use Illuminate\Support\Carbon;
  */
 class User extends Authenticatable implements MustVerifyEmail
 {
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable, WithPrivileges;
 
     protected $fillable = [
         'name',

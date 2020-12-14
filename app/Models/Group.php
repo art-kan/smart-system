@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Extra\Privileges\WithPrivileges;
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
@@ -42,7 +43,7 @@ use Illuminate\Support\Carbon;
  */
 class Group extends Model
 {
-    use HasFactory;
+    use HasFactory, WithPrivileges;
 
     protected $fillable = [
         'name',
