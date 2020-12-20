@@ -18,12 +18,13 @@ class CreatePrivilegesOnReportRequestsTable extends Migration
             $table->foreignId('target_id');
             $table->primary(['group_id', 'target_id']);
 
-            $table->boolean('close_priv');
-            $table->boolean('open_priv');
-            $table->boolean('edit_info_priv');
-            $table->boolean('response_priv');
-            $table->boolean('reject_response_priv');
-            $table->boolean('accept_response_priv');
+            $table->boolean('inspect_priv')->default(false);
+            $table->boolean('close_priv')->default(false);
+            $table->boolean('open_priv')->default(false);
+            $table->boolean('edit_info_priv')->default(false);
+            $table->boolean('response_priv')->default(false);
+            $table->boolean('reject_response_priv')->default(false);
+            $table->boolean('accept_response_priv')->default(false);
             $table->timestamps();
         });
     }
