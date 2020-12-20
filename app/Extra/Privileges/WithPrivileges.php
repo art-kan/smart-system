@@ -3,11 +3,12 @@
 namespace App\Extra\Privileges;
 
 use App\Models\Group;
+use App\Models\ReportRequest;
 use App\Models\User;
 
 trait WithPrivileges {
     /**
-     * @param User|Group|int|int[] $target
+     * @param User|Group|ReportRequest|int|int[] $target
      * @param Privilege $priv
      * @return bool
      */
@@ -17,7 +18,7 @@ trait WithPrivileges {
     }
 
     /**
-     * @param User|Group|int|int[] $target
+     * @param User|Group|ReportRequest|int|int[] $target
      * @param Privilege $priv
      * @return bool
      */
@@ -39,11 +40,12 @@ trait WithPrivileges {
 
 /**
  * @param $object
- * @return Group|User|int
+ * @return Group|User|ReportRequest|int
  */
 function normalize($object)
 {
-    if ($object instanceof User || $object instanceof Group)
+    // TODO: USE TRAIT FOR RESOURCES
+    if ($object instanceof User || $object instanceof Group || $object instanceof ReportRequest)
         return $object;
 
     if (is_object($object)) return $object->id;
