@@ -5,6 +5,7 @@ namespace App\Extra\Privileges;
 use App\Models\Group;
 use App\Models\ReportRequest;
 use App\Models\User;
+use Illuminate\Database\Query\Builder;
 
 trait WithPrivileges {
     /**
@@ -27,12 +28,22 @@ trait WithPrivileges {
         return $priv->update(normalize($this), $target);
     }
 
-    public function availableGroups($priv)
+    public function availableReports(Privilege $priv): Builder
+    {
+        return $priv->allReports(normalize($this));
+    }
+
+    public function availableReportRequests(Privilege $priv): Builder
+    {
+        return $priv->allReportRequests(normalize($this));
+    }
+
+    public function availableGroups(Privilege $priv): Builder
     {
         return $priv->allGroups(normalize($this));
     }
 
-    public function availableUsers($priv)
+    public function availableUsers(Privilege $priv): Builder
     {
         return $priv->allUsers(normalize($this));
     }
@@ -49,4 +60,7 @@ function normalize($object)
         return $object;
 
     if (is_object($object)) return $object->id;
+
+    return (int) $object;
 }
+

@@ -5,6 +5,8 @@ namespace App\Extra\Privileges;
 
 
 use App\Models\Group;
+use App\Models\Report;
+use App\Models\ReportRequest;
 use App\Models\User;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Facades\DB;
@@ -17,6 +19,8 @@ class Privilege
 
     /** @var boolean[] */
     private $setting;
+
+    const PRIVILEGE_TABLES = ['privileges_on_groups', 'privileges_on_report_requests'];
 
     const ALL_PRIVILEGES_ON_GROUPS = [
         'inspect_priv',
@@ -71,6 +75,11 @@ class Privilege
         ));
     }
 
+    public static function fromAllowedList(string $target, $list): Privilege
+    {
+        return new self($target, self::assignBooleans($list, true));
+    }
+
     /**
      * @param User|Group|int|int[] $object
      * @param User|Group|int|int[] $target
@@ -94,20 +103,26 @@ class Privilege
         return $this->checkSettingValidity($this->setting) && $builder->update($this->setting);
     }
 
+    public function allReports($object): Builder
+    {
+        return Report::whereIn('id', $this->buildQueryHead($object)->select('target_id'));
+    }
+
+    public function allReportRequests($object): Builder
+    {
+        return ReportRequest::whereIn('id', $this->buildQueryHead($object)->select('target_id'));
+    }
+
     public function allGroups($object): Builder
     {
         return Group::whereIn('id',
-            $this->buildQueryHead($object)
-                ->where($this->setting)
-                ->select('target_id')
-        );
+            $this->buildQueryHead($object)->select('target_id'));
     }
 
     public function allUsers($object): Builder
     {
         return User::whereIn('id',
             $this->buildQueryHead($object)
-                ->where($this->setting)
                 ->join('group_lists', 'group_lists.group_id', $this->table.'.group_id')
                 ->select('group_lists.user_id')
         );
@@ -121,7 +136,9 @@ class Privilege
 
         return is_int($object)
             ? DB::table($this->table)->where('group_id', $object)
-            : DB::table($this->table)->whereIn('group_id', $object);
+                ->where($this->setting)
+            : DB::table($this->table)->whereIn('group_id', $object)
+                ->where($this->setting);
     }
 
     private function setQueryTarget(Builder $q, $target): Builder
