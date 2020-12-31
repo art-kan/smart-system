@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Extra\Privileges\Privilege;
 use App\Extra\Privileges\WithPrivileges;
 use Eloquent;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -11,6 +12,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\DatabaseNotification;
 use Illuminate\Notifications\DatabaseNotificationCollection;
@@ -74,6 +76,21 @@ class User extends Authenticatable implements MustVerifyEmail
         'email_verified_at' => 'datetime',
     ];
 
+    protected static function boot()
+    {
+        parent::boot();
+
+        self::created(function (User $model) {
+            $priv_group = Group::create([
+                'name' => $model->name,
+                'organization_id' => $model->organization_id,
+                'only_user_id' => $model->id,
+            ]);
+
+            $priv_group->users()->attach($model);
+        });
+    }
+
     public function organization(): BelongsTo
     {
         return $this->belongsTo(Organization::class);
@@ -87,5 +104,23 @@ class User extends Authenticatable implements MustVerifyEmail
     public function primitiveGroup(): HasOne
     {
         return $this->hasOne(Group::class, 'only_user_id');
+    }
+
+    public function writeTo(User $user, string $text): ChatMessage
+    {
+        return ChatMessage::create([
+            'sent_by' => $this->id,
+            'body' => $text,
+            'chat_id' => $this->chatWith($user)->select('id'),
+        ]);
+    }
+
+    public function chatWith(User $user): ?Chat
+    {
+        return Chat::where('id', function (QueryBuilder $query) use ($user) {
+            $query->from('private_chat_links')
+                ->where(['user_id' => $this->id, 'to_user_id' => $user->id])
+                ->select('chat_id');
+        })->first();
     }
 }

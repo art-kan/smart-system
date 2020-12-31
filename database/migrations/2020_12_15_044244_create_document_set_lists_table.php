@@ -14,10 +14,10 @@ class CreateDocumentSetListsTable extends Migration
     public function up()
     {
         Schema::create('document_set_lists', function (Blueprint $table) {
-            $table->foreignId('doc_id');
-            $table->foreignId('set_id');
+            $table->foreignId('archive_document_id');
+            $table->foreignId('document_set_id');
 
-            $table->primary(['doc_id', 'set_id']);
+            $table->primary(['archive_document_id', 'document_set_id']);
         });
     }
 

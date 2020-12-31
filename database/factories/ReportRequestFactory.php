@@ -25,6 +25,7 @@ class ReportRequestFactory extends Factory
     {
         return [
             'body' => $this->faker->text,
+            'title' => $this->faker->title,
             'status' => $this->faker->randomElement(ReportRequest::STATUSES),
             'report_request_id' => function () {
                 return ReportRequest::all('id')->random()->id;

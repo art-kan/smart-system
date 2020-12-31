@@ -3,16 +3,19 @@
 namespace App\Extra\Documents;
 
 use App\Models\ArchiveDocument;
-use Illuminate\Database\Query\Builder;
+use App\Models\DocumentSet;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
-trait WithAttachments {
-    public function attachments(): Builder
+trait WithAttachments
+{
+    public function documentSet()
     {
-        return ArchiveDocument::whereIn('id',
-            DB::table('document_set_lists')
-                ->where('set_id', $this->document_set_id)
-                ->select('set_id')
-        );
+        return $this->belongsTo(DocumentSet::class);
+    }
+
+    public function getAttachments(): Collection
+    {
+        return $this->documentSet ? $this->documentSet->documents : collect();
     }
 }

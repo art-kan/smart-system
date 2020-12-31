@@ -12,8 +12,10 @@
         "fideloper/proxy": "^4.4",
         "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "^7.0.1",
+        "jenssegers/agent": "^2.6",
         "laravel/framework": "^8.12",
-        "laravel/tinker": "^2.5"
+        "laravel/tinker": "^2.5",
+        "mews/purifier": "^3.3"
     },
     "require-dev": {
         "barryvdh/laravel-ide-helper": "^2.8",
@@ -39,7 +41,10 @@
             "App\\": "app/",
             "Database\\Factories\\": "database/factories/",
             "Database\\Seeders\\": "database/seeders/"
-        }
+        },
+        "files": [
+            "app/helpers.php"
+        ]
     },
     "autoload-dev": {
         "psr-4": {

@@ -13,7 +13,7 @@ class CreatePrivilegesOnReportRequestsTable extends Migration
      */
     public function up()
     {
-        Schema::create('privileges_on_report_requests_table', function (Blueprint $table) {
+        Schema::create('privileges_on_report_requests', function (Blueprint $table) {
             $table->foreignId('group_id');
             $table->foreignId('target_id');
             $table->primary(['group_id', 'target_id']);
@@ -25,7 +25,6 @@ class CreatePrivilegesOnReportRequestsTable extends Migration
             $table->boolean('response_priv')->default(false);
             $table->boolean('reject_response_priv')->default(false);
             $table->boolean('accept_response_priv')->default(false);
-            $table->timestamps();
         });
     }
 
@@ -36,6 +35,6 @@ class CreatePrivilegesOnReportRequestsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('privileges_on_report_requests_table');
+        Schema::dropIfExists('privileges_on_report_requests');
     }
 }

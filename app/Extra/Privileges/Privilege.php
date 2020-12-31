@@ -8,7 +8,6 @@ use App\Models\Group;
 use App\Models\Report;
 use App\Models\ReportRequest;
 use App\Models\User;
-use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
@@ -30,9 +29,11 @@ class Privilege
         'add_members_priv',
         'remove_members_priv',
         'edit_members_priv',
+        'ask_reports_priv',
     ];
 
     const ALL_PRIVILEGES_ON_REPORT_REQUESTS = [
+        'inspect_priv',
         'open_priv',
         'close_priv',
         'edit_info_priv',
@@ -64,12 +65,13 @@ class Privilege
         return new Privilege('report_request', array_merge(
             self::assignBooleans(self::ALL_PRIVILEGES_ON_REPORT_REQUESTS, true),
             self::assignBooleans(self::addGrantKeyPrefix(self::ALL_PRIVILEGES_ON_REPORT_REQUESTS), true),
+            ['response_priv' => false]
         ));
     }
 
     public static function getGroupCreatorDefaultPriv(): Privilege
     {
-        return new Privilege('report_request', array_merge(
+        return new Privilege('group', array_merge(
             self::assignBooleans(self::ALL_PRIVILEGES_ON_GROUPS, true),
             self::assignBooleans(self::addGrantKeyPrefix(self::ALL_PRIVILEGES_ON_GROUPS), true),
         ));
@@ -95,31 +97,30 @@ class Privilege
         return (array) $fetched == $this->setting;
     }
 
-    public function update($object, $target): bool
+    public function update(int $group_id, int $target_id): bool
     {
-        $builder = $this->buildQueryHead($object);
-        $this->setQueryTarget($builder, $target);
-
-        return $this->checkSettingValidity($this->setting) && $builder->update($this->setting);
+        return $this->checkSettingValidity($this->setting)
+            && DB::table($this->table)
+                ->updateOrInsert(['group_id' => $group_id, 'target_id' => $target_id], $this->setting);
     }
 
-    public function allReports($object): Builder
+    public function allReports($object)
     {
         return Report::whereIn('id', $this->buildQueryHead($object)->select('target_id'));
     }
 
-    public function allReportRequests($object): Builder
+    public function allReportRequests($object)
     {
         return ReportRequest::whereIn('id', $this->buildQueryHead($object)->select('target_id'));
     }
 
-    public function allGroups($object): Builder
+    public function allGroups($object)
     {
         return Group::whereIn('id',
             $this->buildQueryHead($object)->select('target_id'));
     }
 
-    public function allUsers($object): Builder
+    public function allUsers($object)
     {
         return User::whereIn('id',
             $this->buildQueryHead($object)
@@ -128,11 +129,11 @@ class Privilege
         );
     }
 
-    private function buildQueryHead($object): Builder
+    private function buildQueryHead($object)
     {
         $object = $object instanceof User
             ? $object->groups()->select('id')
-            : ($object instanceof Group ? $object->id : $object);
+            : (is_object($object) ? $object->id : $object);
 
         return is_int($object)
             ? DB::table($this->table)->where('group_id', $object)
@@ -141,7 +142,7 @@ class Privilege
                 ->where($this->setting);
     }
 
-    private function setQueryTarget(Builder $q, $target): Builder
+    private function setQueryTarget($q, $target)
     {
         $target = $target instanceof User
             ? $target->groups()->get('id')

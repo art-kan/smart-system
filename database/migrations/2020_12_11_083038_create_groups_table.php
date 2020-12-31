@@ -21,7 +21,7 @@ class CreateGroupsTable extends Migration
             $table->text('description')->nullable();
 
             $table->string('password')->nullable();
-            $table->boolean('is_hidden');
+            $table->boolean('is_hidden')->default(false);
             $table->foreignId('only_user_id')->nullable();
 
             $table->timestamps();

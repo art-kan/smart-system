@@ -18,7 +18,7 @@ class CreateReportsTable extends Migration
             $table->foreignId('report_request_id');
             $table->foreignId('created_by');
             $table->text('body');
-            $table->string('status')->default('PENDING');
+            $table->string('status')->default(\App\Models\Report::DEFAULT_STATE);
             $table->foreignId('document_set_id')->nullable();
             $table->timestamps();
 

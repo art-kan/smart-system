@@ -24,6 +24,7 @@ class ArchiveDocumentFactory extends Factory
         $ext = $this->faker->fileExtension;
         return [
             'filename' => $this->faker->word . $ext,
+            'size' => $this->faker->numberBetween(0, 2 ** 20),
             'path' => $this->faker->file('/tmp', '/tmp', true),
         ];
     }

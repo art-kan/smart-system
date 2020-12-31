@@ -37,12 +37,14 @@ use Illuminate\Support\Carbon;
  * @method static Builder|Report whereUpdatedAt($value)
  * @property-read User $creator
  * @property-read ReportRequest $respondedTo
+ * @property-read \App\Models\DocumentSet|null $documentSet
  */
 class Report extends Model
 {
     use HasFactory, WithAttachments;
 
-    const STATUSES = ['PENDING', 'ACCEPTED', 'REJECTED'];
+    const STATUSES = ['pending', 'accepted', 'rejected'];
+    const DEFAULT_STATE = 'pending';
 
     protected $fillable = [
         'report_request_id',
@@ -67,5 +69,10 @@ class Report extends Model
         if (!in_array($new_status, self::STATUSES)) return false;
         $this->status = $new_status;
         return true;
+    }
+
+    public static function normalizeStatus($string): string
+    {
+        return in_array($string, self::STATUSES) ? $string : self::DEFAULT_STATE;
     }
 }

@@ -16,10 +16,10 @@ class CreateReportRequestsTable extends Migration
         Schema::create('report_requests', function (Blueprint $table) {
             $table->id();
             $table->foreignId('created_by');
-            $table->string('string');
+            $table->string('title');
             $table->text('body');
             $table->dateTime('due_date')->nullable();
-            $table->string('status')->default('ACTIVE');
+            $table->string('status')->default(\App\Models\ReportRequest::DEFAULT_STATUS);
             $table->foreignId('document_set_id')->nullable();
             $table->timestamps();
         });

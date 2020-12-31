@@ -1,0 +1,156 @@
+.request_list_container {
+    margin: 34px 20px 0 20px;
+}
+
+.request_date {
+    color: #83899650;
+}
+
+.request_item_container {
+    margin: 34px 0 0 0;
+    display: flex;
+}
+
+.request_list_content {
+    display: flex;
+    height: 70vh;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.empty_folder-icons {
+    margin-bottom: 34px;
+}
+
+.profile_icon {
+    width: 50px;
+    height: 55px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50px;
+    background: #dd00ff50;
+}
+
+.profile_name_container, .request_title_container {
+    margin: 0 0 0 10px;
+}
+
+.add_request_btn_container {
+    position: absolute;
+    bottom: 87px;
+    right: 20px;
+}
+
+.add_request_btn {
+    width: 45px;
+    height: 45px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    color: #ffffff;
+    background: #167DFF;
+}
+
+.description_wrap {
+    margin-top: 34px;
+}
+
+.description-page_head {
+    display: flex;
+    justify-content: space-between;
+    margin: 20px 20px 0 0;
+}
+
+.school-id {
+    padding: 10px;
+    border-radius: 0 8px 8px 0;
+    color: #fff;
+    background: #167DFF;
+}
+
+.messenger {
+    background: #167fff69;
+    padding: 10px;
+    border-radius: 8px;
+}
+
+
+.school_request_content {
+    margin: 34px 20px 0 20px;
+}
+
+.school_request-description {
+    margin: 14px 0 0 0;
+}
+
+.school_request-file_list_container {
+    margin: 34px 0 0 0;
+    display: flex;
+    justify-content: center;
+}
+
+.school_request_list_item {
+    margin: 16px 0 16px 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.school_request_list_item img {
+    margin-right: 14px;
+}
+
+.tool-bar_container {
+    margin: 0 20px 0 20px;
+    width: 90%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: absolute;
+    bottom: 67px;
+}
+
+.tool-bar_left-wrap {
+    display: flex;
+    flex-grow: 2;
+}
+
+.tool-bar_right-wrap {
+    display: flex;
+    justify-content: space-between;
+    flex-grow: 1;
+}
+
+.overwork, .reject, .confirm {
+    width: 44px;
+    height: 44px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.overwork {
+    background: #16FF1F;
+}
+
+.reject {
+    background: #DD042D;
+}
+
+.confirm {
+    background: #167DFF;
+}
+
+.footer_link {
+    stroke: #fff;
+}
+
+.footer_link.active {
+    stroke: #167DFF;
+}

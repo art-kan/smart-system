@@ -28,6 +28,8 @@ class CreatePrivilegesOnGroupsTable extends Migration
             $table->boolean('remove_members_priv')->default(false);
             $table->boolean('edit_members_priv')->default(false);
             $table->boolean('fire_members_priv')->default(false);
+
+            $table->boolean('ask_reports_priv')->default(false);
         });
     }
 

@@ -25,9 +25,7 @@ class ReportFactory extends Factory
     public function definition(): array
     {
         return [
-            'title' => $this->faker->title,
-            'body' => $this->faker->text,
-            'due_date' => $this->faker->dateTimeBetween('now', '+1 year'),
+            'body' => '<p>'.$this->faker->text(500).'</p>',
             'status' => $this->faker->randomElement(Report::STATUSES),
             'report_request_id' => ReportRequest::factory(),
             'document_set_id' => function () {

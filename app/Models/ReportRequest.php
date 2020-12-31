@@ -6,11 +6,14 @@ use App\Extra\Documents\WithAttachments;
 use App\Extra\Privileges\Privilege;
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
 
 /**
  * App\Models\ReportRequest
@@ -38,12 +41,18 @@ use Illuminate\Support\Carbon;
  * @method static Builder|ReportRequest whereStatus($value)
  * @method static Builder|ReportRequest whereString($value)
  * @method static Builder|ReportRequest whereUpdatedAt($value)
+ * @property string $title
+ * @property-read Collection|Group[] $responderGroups
+ * @property-read int|null $responder_groups_count
+ * @method static Builder|ReportRequest whereTitle($value)
+ * @property-read DocumentSet|null $documentSet
  */
 class ReportRequest extends Model
 {
     use HasFactory, WithAttachments;
 
-    const STATUSES = ['ACTIVE', 'CLOSED', 'ARCHIVED'];
+    const STATUSES = ['active', 'closed', 'archived'];
+    const DEFAULT_STATUS = 'active';
 
     protected $fillable = [
         'created_by',
@@ -64,6 +73,7 @@ class ReportRequest extends Model
 
         self::created(function (ReportRequest $model) {
             $model->creator->updatePrivilege($model, Privilege::getReportRequestCreatorDefaultPriv());
+            $model->__DDoPEAssignSchoolsAsResponders();
         });
     }
 
@@ -81,10 +91,69 @@ class ReportRequest extends Model
         return $builder;
     }
 
+    public function responsesGroupedByDate(string $status = null): Collection
+    {
+        return $this->responses($status)
+            ->with('creator')
+            ->select(['id', 'created_at', 'created_by'])
+            ->selectRaw('LEFT (body, 150) as body')
+            ->orderBy('created_at', 'DESC')
+            ->get()
+            ->groupBy(function (Report $item) {
+                return \Carbon\Carbon::parse($item->created_at)->format('m.d.Y');
+            });
+    }
+
+    public function responderGroups(): BelongsToMany
+    {
+        return $this->belongsToMany(Group::class,
+            Privilege::getTableNameByTargetType('report_request')
+        )->wherePivot('response_priv', true);
+    }
+
+    public function responders()
+    {
+        $priv_table = Privilege::getTableNameByTargetType('report_request');
+
+        return User::whereIn('id',
+            DB::table($priv_table)
+                ->where('target_id', $this->id)
+                ->where('response_priv', true)
+                ->join('group_lists', 'group_lists.group_id', $priv_table.'.group_id')
+                ->select('user_id')
+        );
+    }
+
     public function setStatus(string $new_status): bool
     {
         if (!in_array($new_status, self::STATUSES)) return false;
         $this->status = $new_status;
         return true;
+    }
+
+    public function isActive(): bool
+    {
+        return $this->status === 'active';
+    }
+
+    public function isEditable(): bool
+    {
+        return $this->status !== 'archived';
+    }
+
+    public function isClosable(): bool
+    {
+        return $this->status === 'active';
+    }
+
+    public function isOpenable(): bool
+    {
+        return $this->status === 'closed';
+    }
+
+    private function __DDoPEAssignSchoolsAsResponders(): bool
+    {
+        return Group::whereName('schools')->first()->updatePrivilege($this,
+            Privilege::fromAllowedList('report_request', ['response_priv']));
     }
 }

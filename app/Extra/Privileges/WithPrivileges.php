@@ -25,25 +25,31 @@ trait WithPrivileges {
      */
     public function updatePrivilege($target, Privilege $priv): bool
     {
-        return $priv->update(normalize($this), $target);
+        \Log::info('dd');
+        \Log::info(json_encode($this));
+        \Log::info(json_encode($target));
+        \Log::info(json_encode((array) $priv));
+        return $priv->update(
+            $this instanceof User ? $this->primitiveGroup->id : $this->id,
+            $target->id);
     }
 
-    public function availableReports(Privilege $priv): Builder
+    public function availableReports(Privilege $priv)
     {
         return $priv->allReports(normalize($this));
     }
 
-    public function availableReportRequests(Privilege $priv): Builder
+    public function availableReportRequests(Privilege $priv)
     {
         return $priv->allReportRequests(normalize($this));
     }
 
-    public function availableGroups(Privilege $priv): Builder
+    public function availableGroups(Privilege $priv)
     {
         return $priv->allGroups(normalize($this));
     }
 
-    public function availableUsers(Privilege $priv): Builder
+    public function availableUsers(Privilege $priv)
     {
         return $priv->allUsers(normalize($this));
     }

@@ -17,6 +17,7 @@ class CreateArchiveDocumentsTable extends Migration
             $table->id();
             $table->string('filename');
             $table->string('path');
+            $table->unsignedInteger('size');
             $table->timestamps();
         });
     }

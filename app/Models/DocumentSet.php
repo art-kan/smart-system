@@ -4,10 +4,11 @@ namespace App\Models;
 
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Collection;
 
 /**
  * App\Models\DocumentSet
@@ -30,5 +31,17 @@ class DocumentSet extends Model
     public function documents(): BelongsToMany
     {
         return $this->belongsToMany(ArchiveDocument::class, 'document_set_lists');
+    }
+
+    /**
+     * @param UploadedFile[] $files
+     * @return DocumentSet
+     */
+    public static function fromFiles(array $files)
+    {
+        $set = self::create();
+        $docs = ArchiveDocument::fromFiles($files);
+        $set->documents()->attach($docs->pluck('id'));
+        return $set;
     }
 }

@@ -1,0 +1,105 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+html, body {
+    height: 100%;
+    font-family: Roboto, sans-serif;
+    font-size: 16px;
+    color: #C4C4C4;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+.btn {
+    font-family: Montserrat, sans-serif;
+}
+
+ul, ol {
+    list-style: none;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+button {
+    cursor: pointer;
+    border: none;
+    color: inherit;
+    font-family: inherit;
+    background: none;
+}
+
+h1 {
+    font-weight: bold;
+    font-size: 36px;
+}
+
+h2 {
+    font-weight: bold;
+    font-size: 24px;
+}
+
+h3 {
+    font-style: normal;
+    font-weight: bold;
+    font-size: 18px;
+    line-height: 27px;
+}
+
+h4 {
+    font-style: normal;
+    font-weight: normal;
+    font-size: 18px;
+    line-height: 27px;
+}
+
+h5 {
+    font-style: normal;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 24px;
+}
+
+.btn {
+    padding: 5px 27px 5px 87px;
+    border-radius: 0 8px 8px 0;
+    border: none;
+}
+
+.btn.btn-disabled {
+    font-style: normal;
+    font-weight: normal;
+    font-size: 18px;
+    line-height: 27px;
+}
+
+.scrollable {
+    scrollbar-color: #167DFF #fff;
+    scrollbar-width: thin;
+}
+
+.scrollable::-webkit-scrollbar {
+    width: 5px;
+}
+
+.scrollable::-webkit-scrollbar-track {
+    background: #fff;
+}
+
+.scrollable::-webkit-scrollbar-thumb {
+    background: #167dff;
+}
+
+.with-ellipsis {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    flex-shrink: 1 !important;
+}
