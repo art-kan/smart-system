@@ -71,13 +71,22 @@ class ReportRequestPolicy
             Privilege::fromAllowedList('report_request', ['close_priv']));
     }
 
+    public function acceptResponse(User $user, ReportRequest $reportRequest): bool
+    {
+        return $this->hasPrivileges($user, $reportRequest, ['accept_response_priv']);
+    }
+
+    public function rejectResponse(User $user, ReportRequest $reportRequest): bool
+    {
+        return $this->hasPrivileges($user, $reportRequest, ['reject_response_priv']);
+    }
+
     public function response(User $user, ReportRequest $reportRequest): bool
     {
         $exist = Report::where(['report_request_id' => $reportRequest->id, 'created_by' => $user->id])
             ->select('status')->first();
 
-        return $user->hasPrivilege($reportRequest, Privilege::fromAllowedList('report_request', ['response_priv']))
-            && ($exist ? $exist->status === 'rejected' : true);
+        return $user->hasPrivilege($reportRequest, Privilege::fromAllowedList('report_request', ['response_priv']));
     }
 
     public function inspect(User $user, ReportRequest $reportRequest): bool
@@ -96,5 +105,10 @@ class ReportRequestPolicy
     public function delete(User $user, ReportRequest $reportRequest)
     {
         //
+    }
+
+    private function hasPrivileges(User $user, ReportRequest $reportRequest, array $privileges): bool
+    {
+        return $user->hasPrivilege($reportRequest, Privilege::fromAllowedList('report_request', $privileges));
     }
 }

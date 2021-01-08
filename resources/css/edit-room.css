@@ -297,6 +297,11 @@ button, input, textarea {
     color: #8993A4;
 }
 
+.request-raino {
+    max-height: 300px;
+    overflow-y: auto;
+}
+
 .request-raino h2 {
     margin-bottom: 30px;
 }

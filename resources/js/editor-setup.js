@@ -24,7 +24,8 @@ function attachmentUIFactory(file, onDelete) {
     attachmentUI.classList.add('attachment');
 
     attachmentIconUI.classList.add('attachment__icon');
-    attachmentIconUI.src = '/images/icon/' + (ext ? ext : 'undefined') + '.png';
+    attachmentIconUI.src = '/images/icons/' + (ext ? ext : 'undefined') + '.png';
+    attachmentIconUI.alt = ext;
 
     attachmentNameUI.classList.add('attachment__filename');
     attachmentNameUI.innerText = file.name;
@@ -53,7 +54,6 @@ function attachmentUIFactory(file, onDelete) {
 
     const submitURL = submitButton.getAttribute('data-action');
     const submitMethod = submitButton.getAttribute('data-method');
-    const redirectURL = submitButton.getAttribute('data-redirect');
 
     if (!(submitButton instanceof HTMLButtonElement)) {
         console.error('#submit-button: ', submitButton);
@@ -71,9 +71,6 @@ function attachmentUIFactory(file, onDelete) {
     if (typeof submitMethod !== 'string' || submitMethod === '')
         throw Error('#submit-button must have `data-method` attribute');
 
-    if (typeof redirectURL !== 'string' || redirectURL === '')
-        throw Error('#submit-button must have `data-redirect` attribute');
-
     submitButton.addEventListener('click', () => {
         /** @type {ClassicEditor} */
         const {editor} = window;
@@ -89,8 +86,8 @@ function attachmentUIFactory(file, onDelete) {
         formData.append('body', editor.getData());
         formData.append('_method', submitMethod);
 
-        newAttachments.forEach((file) => formData.append('attached[]', file));
-        attachmentTrash.forEach((id) => formData.append('detached[]', id.toString()));
+        newAttachments.forEach((file) => formData.append('attach[]', file));
+        attachmentTrash.forEach((id) => formData.append('detach[]', id.toString()));
 
         fetch(submitURL, {
             method: 'POST',
@@ -102,7 +99,7 @@ function attachmentUIFactory(file, onDelete) {
             },
         }).then((res) => {
             if (res.status === 200) {
-                location.href = redirectURL;
+                location.href = res.url;
             }
         });
     });
@@ -171,20 +168,24 @@ function attachmentUIFactory(file, onDelete) {
 
     for (const button of buttons) {
         const command = button.getAttribute('data-command');
+        const value = button.getAttribute('data-value');
+
         editor.commands.get(command).on('set:value', (info, name, value) => {
             if (value) button.classList.add('active');
             else button.classList.remove('active');
         });
 
         button.addEventListener('click', () => {
-            editor.execute(command);
+            if (value) editor.execute(command, JSON.parse(value));
+            else editor.execute(command);
+
+            editor.focus();
         });
     }
 }();
 
 ///////////////////////////////
 /// BASEMENT WITH HELPERS
-
 
 function humanFileSize(bytes, dp = 1) {
     const thresh = 1024;

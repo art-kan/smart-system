@@ -2,8 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Extra\Privileges\Privilege;
-use App\Models\ArchiveDocument;
+use App\Http\Controllers\traits\CabinetTricks;
 use App\Models\DocumentSet;
 use App\Models\Report;
 use App\Models\ReportRequest;
@@ -13,46 +12,73 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
-use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
-use PhpParser\Comment\Doc;
-use Throwable;
+use Illuminate\Validation\Rule;
 
 class ReportRequestController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return Response
-     */
-    public function index(): Response
+    use CabinetTricks;
+
+    public function index(Request $request)
     {
-        $data = Auth::user()->availableReportRequests(
-            Privilege::fromAllowedList('report_requests', ['inspect_priv']));
-        return response($data);
+        /** @var ReportRequest $toShow */
+        $toShow = ReportRequest::latest()->first();
+
+        if (is_null($toShow)) {
+            return viewMobileOrDesktop('cabinet');
+        }
+
+        return $this->show($request, $toShow);
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
+     * @param Request $request
+     * @param ReportRequest $reportRequest
+     * @return Application|Factory|View
      */
+    public function show(Request $request, ReportRequest $reportRequest)
+    {
+        $reportsStatus = Report::normalizeStatus($request->query('report-status'));
+
+//        dd([
+//            'response' => Auth::user()->can('response', $reportRequest)
+//                ? $reportRequest->responseFrom(Auth::user()) : null,
+//        ]);
+
+        return viewMobileOrDesktop('cabinet', [
+            'reportRequests' => $this->availableActiveReportRequests()->get(),
+            'activeReportRequest' => $reportRequest,
+            'reportStatus' => $reportsStatus,
+            'response' => Auth::user()->can('response', $reportRequest)
+                ? $reportRequest->responseFrom(Auth::user()) : null,
+            'reportsGroupedByDate' => $reportRequest->responsesGroupedByDate($reportsStatus),
+            'reporters' => $reportRequest
+                ->respondersJoinedWithReports()
+                ->select(['users.id', 'users.name', 'reports.status'])
+                ->get()
+                ->sort(function ($a, $b) {
+                    $table = array_flip(Report::STATUSES);
+                    $as = $table[$a->status ?? Report::DEFAULT_STATE];
+                    $bs = $table[$b->status ?? Report::DEFAULT_STATE];
+                    if ($as != $bs) return $as > $bs;
+                    return $a->name > $b->name;
+                }),
+            'chatData' => $this->fetchChatData($request),
+        ]);
+    }
+
     public function create()
     {
         return viewMobileOrDesktop('editroom', [
             'title' => 'Создание запроса',
             'placeholder' => 'Напишите описание для запроса, чтобы администрация школы могла выполнить необходимые вам действия.',
             'useAttachments' => true,
-            'actionURL' => route('cabinet.report-request.store'),
-            'redirectURL' => route('cabinet.report-request'), // TODO: IT SHOULD BE DETERMINED AFTER ACTUAL STORING
+            'actionURL' => route('cabinet.report-requests.store'),
             'actionMethod' => 'POST',
         ]);
     }
 
     /**
-     * Store a newly created resource in storage.
-     *
      * @param Request $request
      * @return RedirectResponse
      */
@@ -69,53 +95,31 @@ class ReportRequestController extends Controller
             ? DocumentSet::fromFiles($request->file('attached'))->id
             : null;
 
-        $insertedId = ReportRequest::insertGetId(array_merge(
+        $created = ReportRequest::create(array_merge(
             $request->only(['title', 'body']),
-            ['created_by' => Auth::user()->id, 'document_set_id' => $set_id],
+            ['created_by' => Auth::user()->id, 'document_set_id' => $set_id]
         ));
 
-        return redirect()->intended(route('cabinet.report-request', $insertedId));
+        return redirect()->intended(route('cabinet.report-requests.show', $created->id));
     }
 
     /**
-     * Display the specified resource.
-     *
      * @param ReportRequest $reportRequest
      * @return Application|Factory|View
      */
-    public static function show(Request $request, ReportRequest $reportRequest)
+    public function edit(ReportRequest $reportRequest)
     {
-        $reportsStatus = Report::normalizeStatus($request->query('report-status'));
-        $activeReportRequests = $this->getActiveReportRequests();
-
-        abort_if(is_null($reportRequest) && $activeReportRequests->isEmpty(), 404);
-
-        $reportRequest = $reportRequest ?? ReportRequest::find($activeReportRequests->get(0)->id);
-
-        return viewMobileOrDesktop('cabinet', [
-            'reportRequests' => $activeReportRequests,
-            'activeReportRequest' => $reportRequest,
-            'reportStatus' => $reportsStatus,
-            'reportsGroupedByDate' => $reportRequest->responsesGroupedByDate($reportsStatus),
-            'reporters' => $reportRequest->responders()->select(['id', 'name'])->get(),
-            'chatData' => $this->fetchChatData($request),
+        return viewMobileOrDesktop('editroom', [
+            'title' => 'Редактирование запроса',
+            'content' => $reportRequest,
+            'attachments' => $reportRequest->getAttachments(),
+            'placeholder' => 'Напишите описание для запроса, чтобы администрация школы могла выполнить необходимые вам действия.',
+            'actionURL' => route('cabinet.report-requests.update', $reportRequest->id),
+            'actionMethod' => 'PUT',
         ]);
     }
 
     /**
-     * Show the form for editing the specified resource.
-     *
-     * @param ReportRequest $reportRequest
-     * @return Response
-     */
-    public function edit(ReportRequest $reportRequest): Response
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
      * @param Request $request
      * @param ReportRequest $reportRequest
      * @return RedirectResponse
@@ -123,52 +127,47 @@ class ReportRequestController extends Controller
     public function update(Request $request, ReportRequest $reportRequest): RedirectResponse
     {
         $request->validate([
-            'status' => ['string'],
             'title' => ['string', 'min:1', 'max:255'],
             'body' => ['string', 'min:1'],
-            'attached' => ['array'],
-            'attached.*' => ['file', 'max:16384'],
-            'detached' => ['array'],
-            'detached.*' => ['integer', 'exists:\App\Models\ArchiveDocument,id'],
+            'attach' => ['array'],
+            'attach.*' => ['file', 'max:16384'],
+            'detach' => ['array'],
+            'detach.*' => ['integer', 'exists:\App\Models\ArchiveDocument,id'],
         ]);
 
-        $update = array_filter($request->only(['title', 'body']));
 
-        if ($request->input('detached') && !empty($request->input('detached') && $reportRequest->document_set_id)) {
-            $reportRequest->documentSet->documents()->detach($request->input('detached'));
-            ArchiveDocument::deleteWithFiles($request->input('detached'));
+        $reportRequest->fill(array_filter($request->only(['title', 'body'])));
+        $reportRequest->detachAttachments($request->input('detach'));
+        $reportRequest->attachUploadedFiles($request->file('attach'));
+
+        $reportRequest->save();
+
+        return redirect()->route('cabinet.report-requests.show', $reportRequest->id);
+    }
+
+    public function changeStatus(Request $request, ReportRequest $reportRequest): RedirectResponse
+    {
+        $request->validate(['status' => ['required', 'string', Rule::in(ReportRequest::STATUSES)]]);
+
+        if ($reportRequest->setStatus($request->input('status'))) {
+            $reportRequest->save();
+            return redirect()->intended(route('cabinet.report-requests.show', $reportRequest->id));
         }
 
-        if ($request->file('attached') && !empty($request->file('attached'))) {
-            if (is_null($reportRequest->document_set_id)) {
-                $update['document_set_id'] = DocumentSet::fromFiles($request->file('attached'))->id;
-            } else {
-                $reportRequest->documentSet->documents()
-                    ->attach(ArchiveDocument::fromFiles($request->file('attached'))->pluck('id'));
-            }
-        }
-
-        if (in_array($request->input('status'), ReportRequest::STATUSES)) {
-            $update['status'] = $request->input('status');
-        }
-
-        $reportRequest->update($update);
-
-        return redirect()->route('cabinet.report-request', $reportRequest->id);
+        abort(500);
     }
 
     /**
-     * Remove the specified resource from storage.
-     *
      * @param ReportRequest $reportRequest
-     * @return Response
+     * @return RedirectResponse
      * @throws Exception
      */
-    public function destroy(ReportRequest $reportRequest): Response
+    public function destroy(ReportRequest $reportRequest): RedirectResponse
     {
         $set = DocumentSet::find($reportRequest->document_set_id);
         $set->documents()->delete();
         $set->delete();
         $reportRequest->delete();
+        return redirect()->intended(route('cabinet.report-requests'));
     }
 }

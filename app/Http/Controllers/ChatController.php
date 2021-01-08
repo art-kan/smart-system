@@ -9,21 +9,20 @@ use Illuminate\Support\Facades\Auth;
 
 class ChatController extends Controller
 {
-    public function receiveMessage(Request $request)
+    public function createMessage(Request $request)
     {
-        // TODO: remove eventually invisible characters
         $request->validate([
             'body' => ['required', 'string', 'min:1'],
             'chat_id' => ['required', 'exists:\App\Models\Chat,id']
         ]);
 
-        $created = ChatMessage::create(
-            array_merge($request->only(['body', 'chat_id']), [
-                'sent_by' => Auth::user()->id,
-            ])
-        );
+        $created = ChatMessage::create([
+            'body' => preg_replace('/[\x00-\x1F\x7F]/u', '', trim($request->input('body'))),
+            'chat_id' => $request->input('chat_id'),
+            'sent_by' => Auth::user()->id,
+        ]);
 
-        return back();
+        return response($created);
     }
 
     public function pollMessages(Request $request, Chat $chat)

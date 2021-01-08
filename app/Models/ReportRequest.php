@@ -12,6 +12,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
+use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 
@@ -115,13 +117,28 @@ class ReportRequest extends Model
     {
         $priv_table = Privilege::getTableNameByTargetType('report_request');
 
-        return User::whereIn('id',
+        return User::whereIn('users.id',
             DB::table($priv_table)
                 ->where('target_id', $this->id)
                 ->where('response_priv', true)
                 ->join('group_lists', 'group_lists.group_id', $priv_table.'.group_id')
                 ->select('user_id')
         );
+    }
+
+    public function respondersJoinedWithReports()
+    {
+        return $this->responders()
+            ->leftJoin('reports', function (JoinClause $joinClause) {
+                $joinClause
+                    ->where('reports.report_request_id', $this->id)
+                    ->on('users.id', 'reports.created_by');
+            });
+    }
+
+    public function responseFrom(User $user): ?Report
+    {
+        return Report::whereReportRequestId($this->id)->where('created_by', $user->id)->first();
     }
 
     public function setStatus(string $new_status): bool

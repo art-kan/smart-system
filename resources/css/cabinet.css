@@ -1,162 +1,5 @@
-h1 {
-    font-weight: bold;
-    font-size: 36px;
-}
-
-h2 {
-    font-weight: bold;
-    font-size: 24px;
-}
-
-p {
-    font-size: 16px;
-    color: rgba(131, 137, 150, 0.5);
-}
-
 .container {
-    background-color: rgba(237, 237, 237, 1);
-    height: 100%;
-    display: flex;
-}
-
-.main-part {
-    flex-grow: 1;
-    display: flex;
-    position: relative;
-}
-
-.welcome {
-    display: flex;
-    align-items: center;
-    flex-direction: column;
-    margin: auto;
-}
-
-.sidebar {
-    width: 250px;
-    background-color: #ffffff;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    border-radius: 0 16px 16px 0;
-    flex-shrink: 0;
-}
-
-.sidebar .report {
-    position: absolute;
-    top: 95px;
-}
-
-.logo > a {
-    display: block;
-}
-
-.logo img {
-    width: 100px;
-    height: 45px;
-    padding-top: 50px;
-    padding-left: 50px;
-    margin-bottom: 100px;
-}
-
-.middle-part {
-    position: relative;
-    top: 250px;
-    height: 340px;
-}
-
-.navigation ul li {
-    margin-bottom: 5px;
-}
-
-.navigation ul li a {
-    border-radius: 0 8px 8px 0;
-    text-decoration: none;
-    color: #333333;
-    font-family: Montserrat, sans-serif;
-    font-style: normal;
-    font-size: 18px;
-    line-height: 27px;
-    position: relative;
-    display: inline-block;
-    padding: 5px 20px 5px 87px;
-    transition: color .3s, background .3s, stroke .3s;
-    stroke: #333;
-}
-
-.navigation ul li a:not(.btn-add):hover {
-    background: rgba(22, 125, 255, 0.25);
-    color: #167DFF !important;
-    border-radius: 0 8px 8px 0;
-    stroke: #167DFF;
-}
-
-.account {
-    display: flex;
-    margin-top: auto;
-    padding: 50px;
-}
-
-.account-avatar {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 50px;
-    height: 55px;
-    background: rgba(219, 0, 255, 0.5);
-    border-radius: 50%;
-    color: #000;
-    font-weight: bold;
-    font-size: 24px;
-}
-
-.nav-item h5 {
-    margin-top: 20px;
-    margin-bottom: 15px;
-    padding-left: 50px;
-}
-
-.navigation .nav-item:first-child h5 {
-    margin-top: 0;
-}
-
-.navigation ul li a svg {
-    height: 27px;
-    width: 27px;
-    display: block;
-    position: absolute;
-    left: 50px;
-}
-
-.account-name {
-    margin-left: 10px;
-    font-weight: 700;
-    display: flex;
-    align-items: center;
-}
-
-.account-name p {
-    font-family: Montserrat, sans-serif;
-    color: #000000;
-}
-
-.btn-add {
-    background: rgba(221, 4, 45, 0.25);
-    color: #DD042D !important;
-    margin-top: 5px;
-    stroke: #DD042D !important;
-}
-
-
-.navigation ul li a.active {
-    background: rgba(22, 125, 255, 0.25);
-    color: #167DFF !important;
-    font-weight: 700;
-    stroke: #167DFF;
-}
-
-.navigation ul li a.active img {
-    filter: invert(42%) sepia(47%) saturate(5580%) hue-rotate(201deg) brightness(101%) contrast(101%);
+    background-color: #ededed;
 }
 
 .welcome img {
@@ -194,7 +37,7 @@ p {
     display: flex;
     flex-direction: column;
     height: 100%;
-    flex-shrink: 0; /*position: relative;*/
+    flex-shrink: 0;
 }
 
 .main-part .request ul li a {
@@ -280,14 +123,23 @@ p {
     padding: 50px;
     display: flex;
     flex-direction: column;
-}
-
-.inbox h2 {
-    color: #000000;
+    height: 100%;
+    box-sizing: border-box;
+    overflow-y: auto;
 }
 
 .top-request {
     flex-shrink: 0;
+    color: #000000;
+}
+
+.top-request h2 {
+    color: #000;
+    margin-bottom: 25px;
+}
+
+.top-request.scrollable {
+    border-bottom: 1px solid;
 }
 
 .top-request__text-body {
@@ -295,9 +147,13 @@ p {
     margin-bottom: 50px;
 }
 
+.top-request__text-body.scrollable {
+    max-height: 250px;
+    overflow-y: auto;
+}
+
 .top-request p {
     font-size: 16px;
-    color: #000000;
     line-height: 21px;
     max-width: 700px;
 }
@@ -312,6 +168,7 @@ p {
     flex-grow: 1;
     display: flex;
     flex-direction: column;
+    padding-top: 20px;
 }
 
 .middle-request ul {
@@ -331,11 +188,30 @@ p {
     text-decoration: none;
     white-space: nowrap;
     display: flex;
+    stroke: rgba(131, 137, 150, 0.5);
+    fill: rgba(131, 137, 150, 0.5);
     align-items: center;
+    position: relative;
+    min-height: 27px;
 }
 
-.middle-request ul li a img {
-    filter: invert(97%) sepia(1%) saturate(5839%) hue-rotate(184deg) brightness(91%) contrast(71%);
+.reports__status-name::first-letter {
+    border-top: 6px solid;
+}
+
+.reports__status-name_accepted::first-letter {
+    border-color: #A1FF8A;
+}
+
+.reports__status-name_pending::first-letter {
+    border-color: #FF8266;
+}
+
+.reports__status-name_rejected::first-letter {
+    border-color: #FFC46B;
+}
+
+.middle-request ul li a svg {
     margin-right: 10px;
 }
 
@@ -344,9 +220,7 @@ p {
 }
 
 .bottom-request {
-    flex-shrink: 0;
     display: flex;
-    float: right;
     align-self: flex-end;
     margin-top: 40px;
 }
@@ -364,6 +238,8 @@ p {
 }
 
 .middle-request ul li a.active {
+    stroke: #000;
+    fill: #000;
     color: #000000;
     position: relative;
 }
@@ -397,6 +273,10 @@ p {
     background: #DD042D;
 }
 
+.button.button-show-own-response {
+    background: #167dff;
+}
+
 .button.button-close {
     background: #DD042D;
 }
@@ -406,6 +286,10 @@ p {
     flex-direction: column;
     flex-grow: 1;
     margin-top: 28px;
+}
+
+.responses-in-date .date {
+    color: rgba(131, 137, 150, 0.5);
 }
 
 .request-empty {
@@ -434,16 +318,24 @@ p {
     margin-left: 10px;
 }
 
-.school ul li a {
+.school .reporter {
     text-decoration: none;
     padding: 12px 0 13px 9px;
     display: block;
-    background: #ffc747;
+    background: #FF8266;
     border-radius: 8px 0 0 8px;
     margin-bottom: 40px;
     color: #000000;
     font-weight: 700;
     font-family: Montserrat, sans-serif;
+}
+
+.school .reporter.reporter_accepted {
+    background: #16FF1F;
+}
+
+.school .reporter.reporter_rejected {
+    background: #ffc747;
 }
 
 .school ul li:first-child {
@@ -472,6 +364,9 @@ p {
     margin-left: 25px;
     padding: 50px;
     background: #ffffff;
+    height: 100%;
+    overflow-y: auto;
+    box-sizing: border-box;
 }
 
 .response-body::after {
@@ -484,9 +379,21 @@ p {
     margin-bottom: 25px;
 }
 
+.response-body p {
+    word-break: break-word;
+    max-width: 40em;
+}
+
+.response-doc .attachments {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
 .back-arrow {
     display: flex;
     align-items: center;
+    margin-bottom: 35px;
 }
 
 .back-arrow h1 {
@@ -528,15 +435,6 @@ p {
     margin-bottom: 26px;
 }
 
-.response-doc p {
-    margin-top: 35px;
-    font-size: 16px;
-    font-family: Roboto, sans-serif;
-    font-weight: 400;
-    line-height: 21px;
-    color: #000000;
-}
-
 .responses-list-author::after {
     content: '';
     display: block;
@@ -571,7 +469,7 @@ p {
     margin-left: auto;
 }
 
-.response-button .cancel {
+.response-button .button {
     padding: 8px 7px 13px 8px;
     background: #DD042D;
     border-radius: 4px;
@@ -580,20 +478,18 @@ p {
     margin-right: 40px;
 }
 
+.response-button .cancel {
+    background: #DD042D;
+}
+
 .response-button .confirm {
-    padding: 8px 6px 13px 8px;
     background: #167DFF;
-    border-radius: 4px;
-    color: #ffffff;
-    border: none;
 }
 
 .chat {
     width: 455px;
     flex-shrink: 0;
     height: 100%;
-    background-image: url('/images/chat-bg.png');
-    background-repeat: repeat;
     margin-left: 50px;
     display: flex;
     flex-direction: column;
@@ -615,6 +511,7 @@ p {
 }
 
 .chat-body {
+    background: url('/images/chat-bg.png');
     flex-grow: 1;
     height: 0;
     overflow-y: auto;
@@ -1174,6 +1071,37 @@ p {
     display: none;
 }
 
+.editor-output {
+    font-family: Roboto, sans-serif;
+    color: #000;
+    line-height: 1.5;
+}
+
+.editor-output ul {
+    list-style: disc;
+    padding-left: 30px;
+}
+
+.editor-output .table {
+    margin: 1em auto;
+    display: table;
+}
+
+.editor-output .table table {
+    border-collapse: collapse;
+    border-spacing: 0;
+    width: 100%;
+    height: 100%;
+    border: 1px double #b3b3b3;
+}
+
+.editor-output .table table td,
+.editor-output .table table th {
+    min-width: 2em;
+    padding: .4em;
+    border: 1px solid #bfbfbf;
+}
+
 /* Cabinet Media Requests */
 
 @media (max-width: 1919px) {
@@ -1194,14 +1122,6 @@ p {
 }
 
 @media (max-width: 1600px) {
-    .sidebar {
-        width: 230px;
-    }
-
-    .navigation ul li a {
-        font-size: 16px;
-    }
-
     .main-part .request ul li a {
         font-size: 16px;
         margin: 0 15px 15px;
@@ -1235,18 +1155,5 @@ p {
 
     .request-box.active .request-box__date {
         padding-right: 38px;
-    }
-
-    .logo img {
-        margin-bottom: 50px;
-    }
-
-    .nav-item h5 {
-        margin-top: 15px;
-        margin-bottom: 10px;
-    }
-
-    .account {
-        padding: 20px 50px;
     }
 }

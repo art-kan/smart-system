@@ -1,0 +1,294 @@
+html {
+    display: flex;
+    height: unset;
+    min-height: 100%;
+}
+
+body {
+    flex: 1;
+    height: unset;
+    padding-left: 250px;
+}
+
+.sidebar {
+    left: 0;
+    position: fixed;
+}
+
+.container {
+    background: #ededed;
+}
+
+h1 {
+    margin-top: 50px;
+    margin-left: 25px;
+    color: #000000;
+}
+
+.library-request {
+    margin: 140px auto 0;
+    width: 1080px;
+}
+
+.period-request {
+    display: flex;
+}
+
+.period-request a,
+.period-request button {
+    margin-right: 40px;
+    color: #000000;
+    display: flex;
+    align-items: center;
+    border: none;
+    background: #ffffff;
+    border-radius: 8px;
+    stroke: #333;
+    padding: 10px 8px;
+}
+
+.period-request a.active,
+.period-request button.active {
+    background: #167DFF;
+    border-radius: 8px;
+    color: #ffffff;
+    font-weight: 700;
+    stroke: #fff;
+}
+
+.period-request button:last-child {
+    margin-left: auto;
+    margin-right: 0;
+}
+
+.range-select {
+    display: flex;
+    flex-grow: 1;
+}
+
+.quick-range {
+    display: flex;
+}
+
+.custom-range-select {
+    display: flex;
+    position: absolute;
+    align-items: center;
+}
+
+.library-list {
+    overflow: hidden;
+}
+
+.library-list span {
+    font-weight: 400;
+    font-family: Montserrat, sans-serif;
+    font-size: 16px;
+    color: rgba(131, 137, 150, 0.5);
+    margin-left: 10px;
+    margin-right: 15px;
+}
+
+.library-list ul li a {
+    text-decoration: none;
+    color: #000000;
+    font-size: 18px;
+    font-weight: 400;
+    list-style: none;
+    display: flex;
+    padding: 20px;
+    background: #ffffff;
+    border-radius: 16px;
+    font-family: Montserrat, sans-serif;
+    align-items: center;
+    position: relative;
+}
+
+.library-list ul li a > * {
+    flex-shrink: 0;
+}
+
+.library-list ul li a.active {
+    background: #167DFF;
+    color: #ffffff;
+    font-weight: 700;
+    stroke: #fff;
+}
+
+.library-list ul li a.active span {
+    color: #ffffff;
+    font-weight: 400;
+}
+
+.library-list ul li a.active .rotate-on-active {
+    transform: rotate(90deg);
+}
+
+.library-list .folder-icon {
+    margin-right: 10px;
+}
+
+.library-list ul {
+    display: flex;
+    overflow: hidden;
+    align-items: flex-start;
+    flex-direction: column;
+
+}
+
+.library-list ul li {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 25px;
+    stroke: #333333;
+    max-width: 100%;
+}
+
+.main-part .library {
+    flex-grow: 1;
+}
+
+.responses-list {
+    background: #fff;
+    width: 100%;
+    border-radius: 0 0 32px 32px;
+    margin-bottom: 40px;
+    margin-top: -16px;
+    padding: 35px 25px 25px;
+    box-sizing: border-box;
+}
+
+.school-library {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+}
+
+.school-library > a::after {
+    content: '';
+    display: block;
+    width: 101px;
+    height: 1px;
+    background: rgba(131, 137, 150, 0.5);
+    position: absolute;
+    bottom: 0;
+}
+
+.responses-list span {
+    margin: 0;
+}
+
+.school-library a:first-child {
+    margin-top: 10px;
+}
+
+.school-library a {
+    padding: 6px 0 !important;
+    margin-bottom: 10px;
+}
+
+.library-body {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-top: 88px;
+}
+
+.last-stat {
+    background: #ffffff;
+    padding: 25px;
+    border-radius: 16px;
+    margin-left: 15px;
+    flex-shrink: 0;
+}
+
+.last-stat h3 {
+    font-family: Montserrat, sans-serif;
+    font-weight: 700;
+    font-size: 18px;
+    color: #000000;
+    margin-bottom: 28px;
+}
+
+.last-stat p {
+    font-family: Montserrat, sans-serif;
+    font-weight: 400;
+    font-size: 18px;
+    color: #000000;
+    margin-right: 27px;
+}
+
+.red {
+    color: #DD042D;
+
+}
+
+.last-stat-text {
+    display: flex;
+    justify-content: space-between;
+}
+
+.last-stat-text:first-child {
+    margin-top: 30px;
+    margin-bottom: 19px;
+}
+
+.last-stat-text:last-child {
+    margin-bottom: 5px;
+}
+
+.library-request h3 {
+    font-family: Montserrat, sans-serif;
+    font-weight: 700;
+    font-size: 24px;
+    color: #000000;
+    margin-right: auto;
+}
+
+.library-request input {
+    background: #DDDDDD;
+    border-radius: 8px;
+    padding: 12px 10px;
+    width: 210px;
+    margin-right: 30px;
+    border: none;
+}
+
+#toggle-custom-range-picker {
+    margin-left: 23px;
+    padding: 10px;
+}
+
+.range-select {
+    position: relative;
+}
+
+.custom-range-select {
+    width: 100%;
+    z-index: 1;
+}
+
+.quick-range {
+    position: relative;
+}
+
+.custom-range-select,
+.quick-range {
+    opacity: 1;
+}
+
+.hidden {
+    transform: translateY(-100%);
+    opacity: 0;
+}
+
+.choose-period {
+    display: flex;
+}
+
+.choose-period button {
+    background: #167DFF;
+    color: #ffffff;
+}

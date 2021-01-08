@@ -119,10 +119,7 @@ button, input, textarea {
     bottom: 2px;
     font-style: italic;
     opacity: 0;
-    -webkit-user-select: none;
-       -moz-user-select: none;
-        -ms-user-select: none;
-            user-select: none;
+    user-select: none;
     transition: opacity 0.5s;
 }
 
@@ -174,14 +171,6 @@ button, input, textarea {
 .editor__title-input:focus {
     outline: none;
     border-color: #167DFF;
-}
-
-.editor__textarea::-moz-placeholder {
-    color: #8993A4;
-}
-
-.editor__textarea:-ms-input-placeholder {
-    color: #8993A4;
 }
 
 .editor__textarea::placeholder {
@@ -306,6 +295,11 @@ button, input, textarea {
     font-size: 18px;
     font-weight: bold;
     color: #8993A4;
+}
+
+.request-raino {
+    max-height: 300px;
+    overflow-y: auto;
 }
 
 .request-raino h2 {

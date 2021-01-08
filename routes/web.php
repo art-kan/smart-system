@@ -3,6 +3,9 @@
 use App\Http\Controllers\ArchiveController;
 use App\Http\Controllers\CabinetController;
 use App\Http\Controllers\ChatController;
+use App\Http\Controllers\ReportController;
+use App\Http\Controllers\ReportRequestController;
+use App\Http\Controllers\ReportsArchiveController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -16,6 +19,10 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::get('/', function () {
+    return redirect()->intended(route('cabinet.index'));
+});
+
 Route::get('login', function () {
     return viewMobileOrDesktop('login');
 })->name('login');
@@ -28,7 +35,7 @@ Route::post('login', function (\Illuminate\Http\Request $request) {
 
     if (Auth::attempt($request->only(['email', 'password']))) {
         $request->session()->regenerate();
-        return redirect()->intended(route('home'));
+        return redirect()->intended(route('cabinet.index'));
     }
 
     if ($request->expectsJson()) {
@@ -44,41 +51,33 @@ Route::middleware('auth')->group(function () {
     });
 
     Route::prefix('/chat')->group(function () {
-        Route::post('/send', [ChatController::class, 'receiveMessage'])->name('chat.send');
+        Route::post('/send', [ChatController::class, 'createMessage'])->name('chat.send');
         Route::get('/{chat}/poll', [ChatController::class, 'pollMessages'])->name('chat.poll');
     });
 
-    Route::prefix('/cabinet')->group(function () {
-        Route::get('/', function () {
-            return redirect('/cabinet/report-requests');
-        })->name('home');
+    Route::prefix('/cabinet')->name('cabinet.')->group(function () {
+        Route::get('/', [CabinetController::class, 'index'])->name('index');
 
-        Route::prefix('/report-requests')->group(function () {
-            Route::get('/create',
-                [CabinetController::class, 'getReportRequestEditor'])->name('cabinet.report-request.creator');
+        Route::resource('/report-requests', ReportRequestController::class);
+        Route::resource('/reports', ReportController::class)->only(['show', 'edit', 'update']);
 
-            Route::get('/{report_request?}',
-                [CabinetController::class, 'getReportRequest'])->name('cabinet.report-request');
+        Route::get('/report-requests/{reportRequest}/response', [ReportController::class, 'create'])
+            ->name('report-requests.response');
 
-            Route::get('/{report_request}/edit',
-                [CabinetController::class, 'getReportRequestEditor'])->name('cabinet.report-request.editor');
+        Route::post('/report-requests/{reportRequest}/response', [ReportController::class, 'store'])
+            ->name('reports.store');
 
-            Route::put('/{report_request}',
-                [CabinetController::class, 'updateReportRequest'])->name('cabinet.report-request.edit');
+        Route::put('/reports/{report}/status', [ReportController::class, 'changeStatus'])
+            ->name('reports.change-status');
+        Route::put('/report-requests/{reportRequest}/status', [ReportRequestController::class, 'changeStatus'])
+            ->name('report-requests.change-status');
+    });
 
-            Route::post('/',
-                [CabinetController::class, 'createReportRequest'])->name('cabinet.report-request.create');
-        });
+    Route::prefix('/archive')->name('archive.')->group(function () {
+        Route::get('/', [ReportsArchiveController::class, 'index'])->name('index');
+    });
 
-
-        Route::prefix('/reports')->group(function () {
-            Route::put('/{report}', [CabinetController::class, 'updateReport'])->name('cabinet.report.edit');
-            Route::get('/response/{report_request}', [CabinetController::class, 'getReportEditor'])->name('cabinet.report.creator');
-            Route::get('/{report}', [CabinetController::class, 'getReport'])->name('cabinet.report');
-
-
-            Route::post('/response/{report_request}', [CabinetController::class, 'createReport'])
-                ->name('cabinet.report.create');
-        });
+    Route::get('/images/icons/{ext}.png', function (string $ext) {
+        return redirect(asset('/images/icons/undefined.png'));
     });
 });

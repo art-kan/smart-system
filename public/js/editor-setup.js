@@ -873,17 +873,6 @@ try {
 
 /***/ }),
 
-/***/ "./resources/css/edit-room.css":
-/*!*************************************!*\
-  !*** ./resources/css/edit-room.css ***!
-  \*************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ }),
-
 /***/ "./resources/js/editor-setup.js":
 /*!**************************************!*\
   !*** ./resources/js/editor-setup.js ***!
@@ -932,7 +921,8 @@ function attachmentUIFactory(file, onDelete) {
   attachmentUI.classList.add('presubmit-bar__attachment');
   attachmentUI.classList.add('attachment');
   attachmentIconUI.classList.add('attachment__icon');
-  attachmentIconUI.src = '/images/icon/' + (ext ? ext : 'undefined') + '.png';
+  attachmentIconUI.src = '/images/icons/' + (ext ? ext : 'undefined') + '.png';
+  attachmentIconUI.alt = ext;
   attachmentNameUI.classList.add('attachment__filename');
   attachmentNameUI.innerText = file.name;
   attachmentTrashUI.classList.add('attachment__btn-remove');
@@ -955,7 +945,6 @@ function attachmentUIFactory(file, onDelete) {
   var titleInput = document.getElementById('title-input');
   var submitURL = submitButton.getAttribute('data-action');
   var submitMethod = submitButton.getAttribute('data-method');
-  var redirectURL = submitButton.getAttribute('data-redirect');
 
   if (!(submitButton instanceof HTMLButtonElement)) {
     console.error('#submit-button: ', submitButton);
@@ -969,7 +958,6 @@ function attachmentUIFactory(file, onDelete) {
 
   if (typeof submitURL !== 'string' || submitURL === '') throw Error('#submit-button must have `data-action` attribute');
   if (typeof submitMethod !== 'string' || submitMethod === '') throw Error('#submit-button must have `data-method` attribute');
-  if (typeof redirectURL !== 'string' || redirectURL === '') throw Error('#submit-button must have `data-redirect` attribute');
   submitButton.addEventListener('click', function () {
     /** @type {ClassicEditor} */
     var _window = window,
@@ -985,10 +973,10 @@ function attachmentUIFactory(file, onDelete) {
     formData.append('body', editor.getData());
     formData.append('_method', submitMethod);
     newAttachments.forEach(function (file) {
-      return formData.append('attached[]', file);
+      return formData.append('attach[]', file);
     });
     attachmentTrash.forEach(function (id) {
-      return formData.append('detached[]', id.toString());
+      return formData.append('detach[]', id.toString());
     });
     fetch(submitURL, {
       method: 'POST',
@@ -998,7 +986,7 @@ function attachmentUIFactory(file, onDelete) {
       }
     }).then(function (res) {
       if (res.status === 200) {
-        location.href = redirectURL;
+        location.href = res.url;
       }
     });
   });
@@ -1096,11 +1084,13 @@ function attachmentUIFactory(file, onDelete) {
             _loop3 = function _loop3() {
               var button = _buttons[_i2];
               var command = button.getAttribute('data-command');
+              var value = button.getAttribute('data-value');
               editor.commands.get(command).on('set:value', function (info, name, value) {
                 if (value) button.classList.add('active');else button.classList.remove('active');
               });
               button.addEventListener('click', function () {
-                editor.execute(command);
+                if (value) editor.execute(command, JSON.parse(value));else editor.execute(command);
+                editor.focus();
               });
             };
 
@@ -1147,14 +1137,13 @@ function humanFileSize(bytes) {
 /***/ }),
 
 /***/ 0:
-/*!**************************************************************************!*\
-  !*** multi ./resources/js/editor-setup.js ./resources/css/edit-room.css ***!
-  \**************************************************************************/
+/*!********************************************!*\
+  !*** multi ./resources/js/editor-setup.js ***!
+  \********************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! /home/kan/playground/smart-system/resources/js/editor-setup.js */"./resources/js/editor-setup.js");
-module.exports = __webpack_require__(/*! /home/kan/playground/smart-system/resources/css/edit-room.css */"./resources/css/edit-room.css");
+module.exports = __webpack_require__(/*! /home/kan/playground/smart-system/resources/js/editor-setup.js */"./resources/js/editor-setup.js");
 
 
 /***/ })

@@ -22,16 +22,21 @@ function viewMobileOrDesktop($view_name, $data = [], $merge_data = [])
     return view(($agent->isMobile() ? 'mobile.' : '') . $view_name, $data, $merge_data);
 }
 
-const extensionToIconMap = [
-    'xls' => 'excel',
-    'xlsx' => 'excel',
-    'docx' => 'word',
-];
-
 function docIconByFilename(string $filename): string
 {
-    $icon = extensionToIconMap[pathinfo($filename)['extension'] ?? ''] ?? 'undefined';
-    return url("/images/icons/$icon.png");
+    $ext = pathinfo($filename)['extension'] ?? 'undefined';
+    return url("/images/icons/$ext.png");
+}
+
+function timeFromDate($date): string
+{
+    return \Carbon\Carbon::parse($date)->format('H:i');
+}
+
+function formatDateAndTime($date): string
+{
+    // TODO: support "5 min ago", "today 12:00", "yesterday 12".
+    return formatDate($date) .' '.timeFromDate($date);
 }
 
 const FORMAT_SIZE_PRECISION = 1;

@@ -83,7 +83,7 @@
                         </button>
                     </li>
                     <li class="editor__tool">
-                        <button class="editor__tool-btn" data-command="insertTable">
+                        <button class="editor__tool-btn" data-command="insertTable" data-value="{ &quot;rows&quot;: 3, &quot;columns&quot;: 5 }">
                             <svg width="26" height="26" viewBox="0 0 26 26" fill="none"
                                  xmlns="http://www.w3.org/2000/svg">
                                 <path fill-rule="evenodd" clip-rule="evenodd"
@@ -98,15 +98,15 @@
             </div>
 
             <div class="editor__body">
-                @if(!isset($noTitleInput))
+                @if(!isset($noTitleField))
                     <input class="editor__title-input"
-                           value="{{ \Illuminate\Support\Arr::get($content, 'title') ?? '' }}"
+                           value="{{ isset($content) ? $content['title'] ?? '' : '' }}"
                            id="title-input"
                            type="text" name="title" placeholder="Заголовок запроса" autocomplete="off"
                            required>
                 @endif
                 <div class="editor__textarea" id="editor" data-placeholder="{{ $placeholder ?? '...' }}">
-                    {!! purify(\Illuminate\Support\Arr::get($content, 'body') ?? '') !!}
+                    {!! purify(isset($content) ? $content['body'] ?? '' : '') !!}
                 </div>
             </div>
         </div>
@@ -125,13 +125,11 @@
                 <input type="file" id="file-input" multiple hidden>
                 <button class="presubmit-bar__submit-btn" type="submit" id="submit-button"
                         data-action="{{ $actionURL }}" data-method="{{ $actionMethod }}"
-                        data-redirect="{{ $redirectURL }}">
-                    Отправить
-                </button>
+                >Отправить</button>
             </div>
             <div class="presubmit-bar__body">
                 @if (isset($hint))
-                    <div class="request-raino">
+                    <div class="request-raino scrollable">
                         <h2>{{ $hint['title'] }}</h2>
                         <span>{{ formatDate($hint['date']) }}</span>
                         <div class="request-raino-describe">{!! purify($hint['body']) !!}</div>
@@ -146,7 +144,7 @@
                                     <li class="presubmit-bar__attachment attachment">
                                         <img class="attachment__icon"
                                              src="{{ docIconByFilename($attachment->filename) }}" alt="JPG">
-                                        <p class="attachment__filename">{{ pathinfo($attachment->filename)['filename'] }}</p>
+                                        <p class="attachment__filename">{{ pathinfo($attachment->filename)['basename'] }}</p>
                                         <button class="attachment__btn-remove"
                                                 data-attachment-id="{{ $attachment->id }}">
                                             <img src="{{ asset('/images/trash.png') }}" alt="Remove">

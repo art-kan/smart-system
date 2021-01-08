@@ -112,7 +112,7 @@ class DatabaseSeeder extends Seeder
         /** @var Chat[] $chats */
         $chats = [];
 
-        foreach ([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15] as $n) {
+        foreach (['1', '4', '9', '10', '13', '19', '25', '26', '32', '48', '57', '62', '73', 'БАМ'] as $n) {
             $user = User::create([
                 'name' => $n,
                 'role' => 'School',
@@ -154,7 +154,6 @@ class DatabaseSeeder extends Seeder
             'body' => '<p>Пример описания отчет-запроса.</p>'
                 . '<p><i>Курсивный</i> <b>Жирный</b> <i><b>Курсивый и жирный</b></i></p>',
             'document_set_id' => $set->id,
-            'created_at' => Carbon::create('yesterday')->toDateTime(),
         ]);
 
         for ($i = 3; $i >= 0; $i--) {

@@ -4,7 +4,7 @@
         @foreach($reportRequests as $reportRequest)
             <li>
                 <a class="request-box {{ $reportRequest->id == $activeReportRequest->id ? 'active' : '' }}"
-                   href="{{ route('cabinet.report-request', $reportRequest->id) }}"
+                   href="{{ route('cabinet.report-requests.show', $reportRequest->id) }}"
                    title="{{ $reportRequest['title'] }}">
                     <svg class="request-box__folder-icon" width="18" height="15" viewBox="0 0 18 15" fill="none"
                          xmlns="http://www.w3.org/2000/svg">
@@ -28,7 +28,7 @@
     </ul>
     @can('create', \App\Models\ReportRequest::class)
         <div class="btn-request">
-            <a class="btn-request-create" href="{{ route('cabinet.report-request.creator') }}">Создать запрос</a>
+            <a class="btn-request-create" href="{{ route('cabinet.report-requests.create') }}">Создать запрос</a>
         </div>
     @endcan
 </div>

@@ -43,7 +43,7 @@ class Report extends Model
 {
     use HasFactory, WithAttachments;
 
-    const STATUSES = ['pending', 'accepted', 'rejected'];
+    const STATUSES = ['pending', 'rejected', 'accepted'];
     const DEFAULT_STATE = 'pending';
 
     protected $fillable = [
@@ -61,7 +61,7 @@ class Report extends Model
 
     public function respondedTo(): BelongsTo
     {
-        return $this->belongsTo(ReportRequest::class);
+        return $this->belongsTo(ReportRequest::class, 'report_request_id');
     }
 
     public function setStatus(string $new_status): bool
@@ -74,5 +74,10 @@ class Report extends Model
     public static function normalizeStatus($string): string
     {
         return in_array($string, self::STATUSES) ? $string : self::DEFAULT_STATE;
+    }
+
+    public function isEditable(): bool
+    {
+        return $this->status === 'rejected';
     }
 }

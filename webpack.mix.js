@@ -13,8 +13,10 @@ const mix = require('laravel-mix');
 
 mix.js('resources/js/editor-setup.js', 'public/js/editor-setup.js')
     .js('resources/js/cabinet.js', 'public/js/cabinet.js')
+    .js('resources/js/reports-archive.js', 'public/js/reports-archive.js')
     .styles('resources/css/common.css', 'public/css/common.css', [require('autoprefixer')])
-    .postCss('resources/css/edit-room.css', 'public/css/edit-room.css')
+    .styles('resources/css/edit-room.css', 'public/css/edit-room.css', [require('autoprefixer')])
+    .styles('resources/css/reports-archive.css', 'public/css/reports-archive.css', [require('autoprefixer')])
     .styles('resources/css/common.mobile.css', 'public/css/common.mobile.css', [require('autoprefixer')])
     .styles('resources/css/login.css', 'public/css/login.css', [require('autoprefixer')])
     .styles('resources/css/login.mobile.css', 'public/css/login.mobile.css', [require('autoprefixer')])

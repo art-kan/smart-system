@@ -29,10 +29,11 @@
 
         <x-report-request :report_request="$activeReportRequest"
                           :report_status="$reportStatus"
+                          :response="$response"
                           :reports_grouped_by_date="$reportsGroupedByDate"
         ></x-report-request>
 
-        @if(is_null($chatData) && $reporters->count() > 1)
+        @if(is_null($chatData))
             <x-responders-list :reporters="$reporters"></x-responders-list>
         @else
             <div class="chat-overlay" id="chat-overlay"></div>
