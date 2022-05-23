@@ -1,0 +1,302 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+html, body {
+    height: 100%;
+    font-family: Roboto, sans-serif;
+    font-size: 16px;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+.btn {
+    font-family: Montserrat, sans-serif;
+}
+
+ul, ol {
+    list-style: none;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+button {
+    cursor: pointer;
+    border: none;
+    color: inherit;
+    font-family: inherit;
+    background: none;
+}
+
+h1 {
+    font-weight: bold;
+    font-size: 36px;
+}
+
+h2 {
+    font-weight: bold;
+    font-size: 24px;
+}
+
+h3 {
+    font-style: normal;
+    font-weight: bold;
+    font-size: 18px;
+    line-height: 27px;
+}
+
+h4 {
+    font-style: normal;
+    font-weight: normal;
+    font-size: 18px;
+    line-height: 27px;
+}
+
+h5 {
+    font-style: normal;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 24px;
+}
+
+.btn {
+    padding: 5px 27px 5px 87px;
+    border-radius: 0 8px 8px 0;
+    border: none;
+}
+
+.btn.btn-disabled {
+    font-style: normal;
+    font-weight: normal;
+    font-size: 18px;
+    line-height: 27px;
+}
+
+.scrollable {
+    scrollbar-color: #167DFF #fff;
+    scrollbar-width: thin;
+}
+
+.scrollable::-webkit-scrollbar {
+    width: 5px;
+}
+
+.scrollable::-webkit-scrollbar-track {
+    background: #fff;
+}
+
+.scrollable::-webkit-scrollbar-thumb {
+    background: #167dff;
+}
+
+.with-ellipsis {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    flex-shrink: 1 !important;
+}
+
+.transparent {
+    opacity: 0;
+}
+
+.container {
+    height: 100%;
+    display: flex;
+}
+
+.main-part {
+    flex-grow: 1;
+    display: flex;
+    position: relative;
+}
+
+.welcome {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    margin: auto;
+}
+
+.sidebar {
+    width: 250px;
+    background-color: #ffffff;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    border-radius: 0 16px 16px 0;
+    flex-shrink: 0;
+}
+
+.logo > a {
+    display: block;
+}
+
+.logo img {
+    width: 100px;
+    height: 45px;
+    padding-top: 50px;
+    padding-left: 50px;
+    margin-bottom: 100px;
+}
+
+.middle-part {
+    position: relative;
+    top: 250px;
+    height: 340px;
+}
+
+.navigation ul li {
+    margin-bottom: 5px;
+}
+
+.navigation ul li a {
+    border-radius: 0 8px 8px 0;
+    text-decoration: none;
+    color: #333333;
+    font-family: Montserrat, sans-serif;
+    font-style: normal;
+    font-size: 18px;
+    line-height: 27px;
+    position: relative;
+    display: inline-block;
+    padding: 5px 20px 5px 87px;
+    transition: color .3s, background .3s, stroke .3s;
+    stroke: #333;
+    fill: #333;
+}
+
+.navigation ul li a:not(.btn-add):hover,
+.navigation ul li a:not(.btn-add).active {
+    background: rgba(22, 125, 255, 0.25);
+    color: #167DFF !important;
+    border-radius: 0 8px 8px 0;
+    stroke: #167DFF;
+    fill: #167DFF;
+}
+
+.account {
+    display: flex;
+    margin-top: auto;
+    padding: 50px;
+}
+
+.account-avatar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 50px;
+    height: 55px;
+    background: rgba(219, 0, 255, 0.5);
+    border-radius: 50%;
+    color: #000;
+    font-weight: bold;
+    font-size: 24px;
+}
+
+.nav-item h5 {
+    font-weight: normal;
+    margin-top: 20px;
+    margin-bottom: 15px;
+    padding-left: 50px;
+    color: rgba(131, 137, 150, 0.5);
+}
+
+.navigation .nav-item:first-child h5 {
+    margin-top: 0;
+}
+
+.navigation ul li a svg {
+    height: 27px;
+    width: 27px;
+    display: block;
+    position: absolute;
+    left: 50px;
+}
+
+.account-name {
+    margin-left: 10px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+}
+
+.account-name p {
+    font-family: Montserrat, sans-serif;
+    color: #000000;
+}
+
+.btn-add {
+    background: rgba(221, 4, 45, 0.25);
+    color: #DD042D !important;
+    margin-top: 5px;
+    stroke: #DD042D !important;
+}
+
+.table-info {
+    border-collapse: collapse;
+    margin-bottom: 50px;
+}
+
+.table-info tr {
+    border-bottom: 1px solid rgba(51, 51, 51, .3);
+}
+
+.table-info td {
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+.table-info .date {
+    margin: unset;
+    color: #8993A4;
+}
+
+.color-closed,
+.color-pending {
+    color: #FF8266;
+}
+
+.color-active,
+.color-accepted {
+    color: #16FF1F;
+}
+
+.color-archived,
+.color-rejected {
+    color: #ffc747;
+}
+
+.table-info td:first-child {
+    padding-right: 30px;
+}
+
+@media (max-width: 1600px) {
+    .sidebar {
+        width: 230px;
+    }
+
+    .logo img {
+        margin-bottom: 50px;
+    }
+
+    .navigation ul li a {
+        font-size: 16px;
+    }
+
+    .nav-item h5 {
+        margin-top: 15px;
+        margin-bottom: 10px;
+    }
+
+    .account {
+        padding: 20px 50px;
+    }
+}

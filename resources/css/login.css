@@ -1,0 +1,122 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+html,
+body {
+    height: 100%;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    background: #4e9ac9 url('/images/register-bg.png') center no-repeat;
+    background-size: cover;
+    font-family: Montserrat, sans-serif;
+    padding: 0 15px;
+    color: #fff;
+}
+
+h1, h2, h3 {
+    font-weight: 700;
+    color: #ffffff;
+}
+
+.register-top {
+    margin: 156px auto 0;
+    width: 850px;
+}
+
+.register {
+    padding: 40px;
+    border: 5px solid #FFFFFF;
+    border-radius: 4px;
+    margin-top: 50px;
+}
+
+.register img {
+    display: block;
+    margin: auto;
+}
+
+
+.register h2 {
+    text-align: center;
+    margin-top: 62px;
+    margin-bottom: 100px;
+}
+
+.logo {
+    display: block;
+    margin-left: 35px;
+    padding-top: 35px;
+    position: absolute;
+}
+
+input {
+    display: table-cell;
+    background: NONE;
+    border: none;
+    border-bottom: 1px solid #C4C4C4;
+    margin-left: 25px;
+    color: #fff;
+    font-family: inherit;
+    font-size: 18px;
+    flex-grow: 1;
+}
+
+input:focus {
+    outline: none;
+}
+
+label {
+    display: table-row;
+    margin-bottom: 15px;
+}
+
+.register-input {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.input-container {
+    display: table;
+}
+
+.register-input h3 {
+    flex-shrink: 0;
+    display: table-cell;
+    padding-bottom: 30px;
+}
+
+.login-btn {
+    margin-left: auto;
+    display: inline-block;
+    margin-top: 84px;
+    padding: 20px 30px;
+    font-weight: 700;
+    border: 1px solid #FFFFFF;
+    border-radius: 16px;
+    transition: 0.5s;
+    font-size: 18px;
+}
+
+.login-btn:hover {
+    background: #fff;
+    color: #333;
+}
+
+.login-btn:focus {
+    outline: 0;
+    border-color: #333;
+}
+
+/* Change Autocomplete styles in Chrome */
+:-webkit-autofill,
+:-webkit-autofill:hover,
+:-webkit-autofill:focus {
+  transition: 9999999s ease-in-out 9999999s;
+}
